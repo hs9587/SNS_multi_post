@@ -64,5 +64,25 @@ ID・パスワード画面になってしまう。
 
 irb で上記のようにブラウザを起動してツイッターにいって、ブラウザ画面の方でログインします。  
 irb 側でクッキー情報とってきて保存、ここではないファイル。
-
+```ruby
+irb(main):031:0> cookies = {twitter: driver.manage.all_cookies}
+=>
+{:twitter=>
+...
+irb(main):032:0> File.open('../cookies.json','w'){ _1.write cookies.to_json }
+=> 2836
+irb(main):033:0> File.open('../cookies.yaml','w'){ _1.write cookies.to_yaml }
+=> 3218
+irb(main):034:0>
+```
+```require 'yaml'``` は必要かも。  
+クッキーの参照``` driver.manage.all_cookies```と「manage」が入ります、ちょっとまえのセレニウムだとそれが無いのか、検索とか ChatGPT とか無いのでてくるので混乱した。  
+保存したクッキーの設定はこんな感じ
+```ruby
+irb(main):036:0> cookies = YAML.load File.read('../cookies.yaml')
+=>
+{:twitter=>
+...
+irb(main):037:0> cookies[:twitter].each{ driver.manage.add_cookie _1 }
+```
 
