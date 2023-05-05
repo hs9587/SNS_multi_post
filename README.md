@@ -32,3 +32,25 @@ Navigateメソッドで各サイトを訪う時、header引数で指定すると
 
 というわけで、OLE の IE で、ブラウザオートメーションするのも無理っぽい。
 
+## Selenium::WebDriver
+そうしたら、セレニウムでウェブドライバー使ってのオートメーションしましょう。
+検索や ChatGPT の示唆にしたがって
+1. 「gem install selenium-webdriver」
+2. Microsoft Edge WebDriver
+https://developer.microsoft.com/ja-jp/microsoft-edge/tools/webdriver/
+より、「edgedriver_win64.zip」のダウンロード
+  1. バージョンは Edgeで「edge://settings/help」で確認、それに合わせたものを選びます、ドライバーのリストの最新よりちょっと前みたい。
+  2. 展開して「msedgedriver.exe」、どこに置きましょう。
+3. それで最低限こんな感じでブラウザ開きます、取り敢えず Edge
+```ruby
+require 'selenium-webdriver'
+
+Selenium::WebDriver::Edge::Service.driver_path \
+  = File.join '＜ドライバーの置き場所＞', 'msedgedriver.exe'
+
+driver = Selenium::WebDriver.for :edge
+driver.get "https://www.google.com/"
+  sleep 10
+driver.quit
+```
+## 認証とクッキー
