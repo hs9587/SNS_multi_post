@@ -77,7 +77,7 @@ irb(main):034:0>
 ```
 ```require 'yaml'``` は必要かも。  
 クッキーの参照``` driver.manage.all_cookies```と「manage」が入ります、ちょっとまえのセレニウムだとそれが無いのか、検索とか ChatGPT とか無いのでてくるので混乱した。  
-保存したクッキーの設定はこんな感じ
+保存したクッキーの読み込みはこんな感じ
 ```ruby
 irb(main):036:0> cookies = YAML.load File.read('../cookies.yaml')
 =>
@@ -85,4 +85,7 @@ irb(main):036:0> cookies = YAML.load File.read('../cookies.yaml')
 ...
 irb(main):037:0> cookies[:twitter].each{ driver.manage.add_cookie _1 }
 ```
+```JSON  File.read('../cookies.yaml'), symbolize_names: true``` でも良い、「symbolize_names」忘れずに、YAML でもそうした方が意図が明確かな、ここの場合は無くてもシンボルで読めるけど。
+あと、「 #manage.add_cookie」するときは事前に一度```driver.get 'https://twitter.com/home'```して置きましょう、「invalid cookie domain (Selenium::WebDriver::Error::InvalidCookieDomainError)」とか出ます。  
+クッキー設定したらまた```driver.get 'https://twitter.com/home'```、それで自分のタイムラインの表示になります。```driver.navigate.refresh```では駄目です、ID・パスワードフォームが再描画されます。
 
