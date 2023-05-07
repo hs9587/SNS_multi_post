@@ -91,3 +91,21 @@ irb(main):037:0> cookies[:twitter].each{ driver.manage.add_cookie _1 }
 
 あと、yamlファイルでクッキーの内容見ると、保存された項目は複数あり、それぞれの expiry: 日時(UNIX起算時秒数)について、認証時点から一年ちょっと(ひと月かな)のものと認証時点かすぐのものとあった。それで後者はすでに過ぎてるけど認証は出来てる、これら複数のクッキー項目実際に認証の意味があるの全部では無いのでしょう。
 
+### ツイート
+そしてツイート投稿します、取り敢えずテキストのみ。F12キーで devtool 開いて要素のソースみながっら指定します。irb から投稿できました。
+
+テキスト入力
+```ruby
+irb(main):020:0> ima = driver.find_element class: "public-DraftEditor-content"
+=> #<Selenium::WebDriver::Element:0x110bb46e id="9f9b61f8-89c6-4287-b1ba-3fd674dd1ccd">
+irb(main):021:0> ima.send_keys 'テスト投稿'
+=> nil
+```
+
+「ツイートする」釦押下
+```ruby
+irb(main):031:0> tweet = driver.find_element :xpath, '//div[@data-testid="tweetButtonInline"]'
+=> #<Selenium::WebDriver::Element:0x..fec2ec9bc id="e3154306-2f72-44d2-8d54-ada4eb3810d4">
+irb(main):032:0> tweet.click
+=> nil
+```
