@@ -89,5 +89,5 @@ irb(main):037:0> cookies[:twitter].each{ driver.manage.add_cookie _1 }
 あと、「 #manage.add_cookie」するときは事前に一度```driver.get 'https://twitter.com/home'```して置きましょう、「invalid cookie domain (Selenium::WebDriver::Error::InvalidCookieDomainError)」とか出ます。  
 クッキー設定したらまた```driver.get 'https://twitter.com/home'```、それで自分のタイムラインの表示になります。```driver.navigate.refresh```では駄目です、ID・パスワードフォームが再描画されます。
 
-あｔ、yamlファイル見ると、保存されたクッキー項目はいくつかあり、それぞれの expiry: 日時(UNIX起算時秒酢)いくつかで、認証時点から一年ちょっと(ひと月かな)のものと認証時点かすぐのものとなってた。それで後者はすでに「過ぎてるけど認証は出来てる、これらの項目実際に認証の意味があるのは全部では無いのでしょう。
+あと、yamlファイル見ると、保存されたクッキー項目はいくつかあり、それぞれの expiry: 日時(UNIX起算時秒酢)いくつかで、認証時点から一年ちょっと(ひと月かな)のものと認証時点かすぐのものとなってた。それで後者はすでに「過ぎてるけど認証は出来てる、これらの項目実際に認証の意味があるのは全部では無いのでしょう。
 
