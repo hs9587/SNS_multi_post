@@ -6,7 +6,8 @@ Selenium::WebDriver::Edge::Service.driver_path \
 urls = {
   twitter:  'https://twitter.com/home',
   facebook: 'https://www.facebook.com/',
-  mixi:     'https://mixi.jp/home.pl'
+  mixi:     'https://mixi.jp/home.pl',
+  fedibird: 'https://fedibird.com/web/timelines/home',
 }
 cookies = JSON File.read('../cookies.json'), symbolize_names: true
 handles = {}
@@ -70,12 +71,30 @@ end # if post
 
 sleep 10
 
+# mastodon: fedibird
+#driver.manage.new_window :tab
+driver.get urls[:fedibird]
+cookies[:fedibird].each{ driver.manage.add_cookie _1 }
+driver.get urls[:fedibird]
+handles[:fedibird] = driver.window_handle
+
+if post then
+  driver.find_element(
+    xpath: '//textarea[@placeholder="今なにしてる？"]'
+  ).send_keys message
+  driver.find_element(
+    xpath: '//button[text()="トゥート！"]'
+  ).click
+end # if post
+
+sleep 10
+
 #
 #driver.manage.new_window :tab
 if post then
 end # if post
 
-sleep 10
+#sleep 10
 
 driver.quit
 
