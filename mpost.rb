@@ -39,7 +39,8 @@ cookies[:facebook].each{ driver.manage.add_cookie _1 }
 driver.get urls[:facebook]
 handles[:facebook] = driver.window_handle
 
-if post then
+if post and false then
+  sleep 10
   ## クッキー設定後の描画ではすぐに全体がグレイアウトするので画面をクリック
   driver.find_element(tag_name: 'body').click
   ## 入力欄をクリックすると投稿ダイアローグが開く
