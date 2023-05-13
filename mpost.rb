@@ -11,6 +11,7 @@ urls = {
 }
 cookies = JSON File.read('../cookies.json'), symbolize_names: true
 handles = {}
+sleeping = 5
 message = 'おはようございます'
 message = 'テスト投稿'
 post    = true
@@ -30,7 +31,7 @@ if post then
   driver.find_element(xpath: '//div[@data-testid="tweetButtonInline"]').click
 end # if post
 
-sleep 10
+sleep sleeping
 
 # facebook
 #driver.manage.new_window :tab
@@ -40,7 +41,7 @@ driver.get urls[:facebook]
 handles[:facebook] = driver.window_handle
 
 if post and false then
-  sleep 10
+  sleep sleeping
   ## クッキー設定後の描画ではすぐに全体がグレイアウトするので画面をクリック
   driver.find_element(tag_name: 'body').click
   ## 入力欄をクリックすると投稿ダイアローグが開く
@@ -56,7 +57,7 @@ if post and false then
   ).click
 end # if post
 
-sleep 10
+sleep sleeping
 
 # mixi
 #driver.manage.new_window :tab
@@ -70,7 +71,7 @@ if post then
   driver.find_element(id: 'voicePostSubmit').click
 end # if post
 
-sleep 10
+sleep sleeping
 
 # mastodon: fedibird
 #driver.manage.new_window :tab
@@ -88,14 +89,14 @@ if post then
   ).click
 end # if post
 
-sleep 10
+sleep sleeping
 
 #
 #driver.manage.new_window :tab
 if post then
 end # if post
 
-#sleep 10
+# sleep sleeping
 
 driver.quit
 
