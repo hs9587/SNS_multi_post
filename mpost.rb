@@ -40,9 +40,7 @@ cookies[:facebook].each{ driver.manage.add_cookie _1 }
 driver.get urls[:facebook]
 handles[:facebook] = driver.window_handle
 
-#if post and false then
-if post or true then
-  sleep sleeping
+if post then
   ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
   ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
   #driver.find_element(tag_name: 'body').click
