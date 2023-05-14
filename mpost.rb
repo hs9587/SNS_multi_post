@@ -40,18 +40,23 @@ cookies[:facebook].each{ driver.manage.add_cookie _1 }
 driver.get urls[:facebook]
 handles[:facebook] = driver.window_handle
 
-if post and false then
+#if post and false then
+if post or true then
   sleep sleeping
-  ## クッキー設定後の描画ではすぐに全体がグレイアウトするので画面をクリック
-  driver.find_element(tag_name: 'body').click
+  ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
+  ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
+  #driver.find_element(tag_name: 'body').click
   ## 入力欄をクリックすると投稿ダイアローグが開く
   driver.find_element(
     xpath: '//span[text()="Hi Shimuraさん、その気持ち、シェアしよう"]'
   ).click
-  ## 投稿ダイアローグにて
-  driver.find_element(
-    xpath: '//div[@aria-label="Hi Shimuraさん、その気持ち、シェアしよう"]'
-  ).send_keys message
+  ## 投稿ダイアローグにて # 準備できるまでちょっと時間掛かる 
+  post_form = Selenium::WebDriver::Wait.new(:timeout => 10).until do
+    driver.find_element(
+      xpath: '//div[@aria-label="Hi Shimuraさん、その気持ち、シェアしよう"]'
+    )
+  end # post_form = Selenium::WebDriver::Wait.new(:timeout => 10).until do
+  post_form.send_keys message
   driver.find_element(
     xpath: '//div[@aria-label="投稿"]'
   ).click
