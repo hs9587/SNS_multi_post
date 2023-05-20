@@ -14,8 +14,15 @@ handles = {}
 sleeping = 5
 message = 'おはようございます'
 message = 'テスト投稿'
+images, downloads = [], 'C:\Users\hs9587\Downloads'  
 post    = true
 post    = false 
+
+if ARGV.size > 0 then
+  message = ARGV.shift
+  images  = ARGV
+  post    = true
+end # if ARGV.size > 0
 
 driver = Selenium::WebDriver.for :edge
 driver.get "https://www.google.com/"
@@ -28,6 +35,10 @@ handles[:twitter] = driver.window_handle
 
 if post then
   driver.find_element(class: 'public-DraftEditor-content').send_keys message
+  input = driver.find_element(tag_name: "input") if images.size > 0
+  images.each do |img|
+    input.send_keys File.join(downloads, img)
+  end # images.each do |img|
   driver.find_element(xpath: '//div[@data-testid="tweetButtonInline"]').click
 end # if post
 
@@ -40,7 +51,7 @@ cookies[:facebook].each{ driver.manage.add_cookie _1 }
 driver.get urls[:facebook]
 handles[:facebook] = driver.window_handle
 
-if post then
+if post and images.size == 0 then # 画像の時はフェイスブックはなし
   ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
   ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
   #driver.find_element(tag_name: 'body').click
@@ -71,6 +82,14 @@ handles[:mixi] = driver.window_handle
 
 if post then
   driver.find_element(id: 'voiceComment'   ).send_keys message
+  if images.size > 0 then
+    driver.find_element(xpath: '//a[@title="写真を追加"]').click 
+    #ファイル選択が出てくる
+    input = driver.find_element(xpath: '//input[@name="photo"]')
+    #前行.click しないて見付からない
+    input.send_keys File.join(downloads, images.first)
+    # ひとつだけ
+  end # if images.size > 0
   driver.find_element(id: 'voicePostSubmit').click
 end # if post
 
@@ -87,6 +106,11 @@ if post then
   driver.find_element(
     xpath: '//textarea[@placeholder="今なにしてる？"]'
   ).send_keys message
+  images.each do |img|
+    input = driver.find_element xpath: '//input[@type="file"]'
+    input.send_keys File.join(downloads, img)
+    # 複数画像のときは、(xpath: '//input[@type="file"]') から繰り返す
+  end # images.each do |img|
   driver.find_element(
     xpath: '//button[text()="トゥート！"]'
   ).click
