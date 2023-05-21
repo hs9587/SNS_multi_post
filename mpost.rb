@@ -27,7 +27,6 @@ end # if ARGV.size > 0
 driver = Selenium::WebDriver.for :edge
 driver.get "https://www.google.com/"
 
-=begin
 # twitter
 driver.get urls[:twitter]
 cookies[:twitter].each{ driver.manage.add_cookie _1 }
@@ -95,7 +94,6 @@ if post then
 end # if post
 
 sleep sleeping
-=end
 
 # mastodon: fedibird
 #driver.manage.new_window :tab
