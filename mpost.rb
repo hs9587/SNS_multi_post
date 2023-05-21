@@ -27,6 +27,7 @@ end # if ARGV.size > 0
 driver = Selenium::WebDriver.for :edge
 driver.get "https://www.google.com/"
 
+=begin
 # twitter
 driver.get urls[:twitter]
 cookies[:twitter].each{ driver.manage.add_cookie _1 }
@@ -94,6 +95,7 @@ if post then
 end # if post
 
 sleep sleeping
+=end
 
 # mastodon: fedibird
 #driver.manage.new_window :tab
@@ -110,6 +112,15 @@ if post then
     input = driver.find_element xpath: '//input[@type="file"]'
     input.send_keys File.join(downloads, img)
     # 複数画像のときは、(xpath: '//input[@type="file"]') から繰り返す
+    uing = true
+    while uing do  
+      sleep sleeping
+      begin# rescue Selenium::WebDriver::Error::NoSuchElementError
+        driver.find_element(class: 'upload-progress__message')
+      rescue Selenium::WebDriver::Error::NoSuchElementError
+        uing = false
+      end  # rescue Selenium::WebDriver::Error::NoSuchElementError
+    end # while uing do  
   end # images.each do |img|
   driver.find_element(
     xpath: '//button[text()="トゥート！"]'
