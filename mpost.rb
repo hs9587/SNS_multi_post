@@ -4,10 +4,11 @@ Selenium::WebDriver::Edge::Service.driver_path \
   = File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
 
 urls = {
-  twitter:  'https://twitter.com/home',
-  facebook: 'https://www.facebook.com/',
-  mixi:     'https://mixi.jp/home.pl',
-  fedibird: 'https://fedibird.com/web/timelines/home',
+  twitter:   'https://twitter.com/home',
+  facebook:  'https://www.facebook.com/',
+  instagram: 'https://www.instagram.com/',
+  mixi:      'https://mixi.jp/home.pl',
+  fedibird:  'https://fedibird.com/web/timelines/home',
 }
 cookies = JSON File.read('../cookies.json'), symbolize_names: true
 handles = {}
@@ -27,6 +28,7 @@ end # if ARGV.size > 0
 driver = Selenium::WebDriver.for :edge
 driver.get "https://www.google.com/"
 
+=begin
 # twitter
 driver.get urls[:twitter]
 cookies[:twitter].each{ driver.manage.add_cookie _1 }
@@ -51,28 +53,92 @@ cookies[:facebook].each{ driver.manage.add_cookie _1 }
 driver.get urls[:facebook]
 handles[:facebook] = driver.window_handle
 
-if post and images.size == 0 then # 画像の時はフェイスブックはなし
+if post then
   ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
   ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
-  #driver.find_element(tag_name: 'body').click
+  driver.find_element(tag_name: 'body').click
   ## 入力欄をクリックすると投稿ダイアローグが開く
   driver.find_element(
     xpath: '//span[text()="Hi Shimuraさん、その気持ち、シェアしよう"]'
   ).click
   ## 投稿ダイアローグにて # 準備できるまでちょっと時間掛かる 
-  post_form = Selenium::WebDriver::Wait.new(:timeout => 10).until do
+  wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+  post_form = wait.until do
     driver.find_element(
       xpath: '//div[@aria-label="Hi Shimuraさん、その気持ち、シェアしよう"]'
     )
   end # post_form = Selenium::WebDriver::Wait.new(:timeout => 10).until do
   post_form.send_keys message
+  if images.size > 0 then
+    shashin = driver.find_element(xpath: '//div[@aria-label="写真・動画"]') 
+    shashin.click
+    #shashin = driver.find_element(xpath: '//div[@aria-label="写真・動画"]') 
+    #sleep sleeping
+    input = wait.until do
+      driver.find_element(xpath: '//input[@type="file"]')
+    end # input = wait.until do
+    #input.attribute('outerHTML').+("\n").display
+    # 初回の input要素は動画っぽくて駄目なの一回書き飛ばす
+    input.send_keys File.join(downloads, images.first)
+    sleep sleeping
+    images.each do |img|
+      input = wait.until do
+        driver.find_element(xpath: '//input[@type="file"]')
+      end # input = wait.until do
+      #input.attribute('outerHTML').+("\n").display
+      input.send_keys File.join(downloads, img)
+      sleep sleeping
+    end # images.each do |img|
+  end # if images.size > 0
   driver.find_element(
     xpath: '//div[@aria-label="投稿"]'
   ).click
 end # if post
 
 sleep sleeping
+=end
 
+# instagram
+#driver.manage.new_window :tab
+driver.get urls[:instagram]
+cookies[:instagram].each{ driver.manage.add_cookie _1 }
+driver.get urls[:instagram]
+handles[:instagram] = driver.window_handle
+
+# ログイン再開時、お知らせをオンにするかのダイアローグ開くので、後で
+driver.find_element(xpath: '//button[text()="後で"]').click
+sleep sleeping
+
+if post and images.size > 0 then # インスタは画像がないとね
+  # 以下、なんか、xpath: //svg が効かなくて、tag_name: svg から選んでる
+  svgs = driver.find_elements(tag_name: 'svg')
+  # 投稿ダイアローグを出す
+  svgs.select{_1.attribute('aria-label')=='新規投稿'}.first.click
+
+  wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+  input_multi = wait.until do
+    driver.find_element(xpath: '//input[@multiple]')
+  end # input_multi = wait.until do
+  input_multi.send_keys File.join(downloads, images.first)
+  # ひとつだけ
+  # multiplle だけど、複数ファイル指定は成功してない、
+  # 「"」区切りスペース区切りかセミコロンか駄目だった
+  sleep sleeping
+  driver.find_element(xpath: '//div[text()="次へ"]').click
+  sleep sleeping
+  driver.find_element(xpath: '//div[text()="次へ"]').click
+
+  caption = wait.until do
+    driver.find_element(xpath: '//div[@aria-label="キャプションを入力…"]')
+  end # caption = wait.until do
+  caption.send_keys message
+
+  driver.find_element(xpath: '//div[text()="シェア"]').click
+end # if post and images.size > 0
+
+sleep sleeping
+
+=begin
 # mixi
 #driver.manage.new_window :tab
 driver.get urls[:mixi]
@@ -126,6 +192,7 @@ if post then
 end # if post
 
 sleep sleeping
+=end
 
 #
 #driver.manage.new_window :tab
@@ -135,4 +202,9 @@ end # if post
 # sleep sleeping
 
 driver.quit
+def none
+end # def none
 
+if $PROGRAM_NAME == __FILE__ then
+  require 'optparse'
+end # if $PROGRAM_NAME == __FILE__
