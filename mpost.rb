@@ -28,14 +28,13 @@ end # if ARGV.size > 0
 driver = Selenium::WebDriver.for :edge
 driver.get "https://www.google.com/"
 
-=begin
 # twitter
 driver.get urls[:twitter]
 cookies[:twitter].each{ driver.manage.add_cookie _1 }
 driver.get urls[:twitter]
 handles[:twitter] = driver.window_handle
 
-if post then
+if post and false then
   driver.find_element(class: 'public-DraftEditor-content').send_keys message
   input = driver.find_element(tag_name: "input") if images.size > 0
   images.each do |img|
@@ -96,7 +95,6 @@ if post then
 end # if post
 
 sleep sleeping
-=end
 
 # instagram
 #driver.manage.new_window :tab
@@ -138,7 +136,6 @@ end # if post and images.size > 0
 
 sleep sleeping
 
-=begin
 # mixi
 #driver.manage.new_window :tab
 driver.get urls[:mixi]
@@ -192,14 +189,15 @@ if post then
 end # if post
 
 sleep sleeping
-=end
 
+=begin
 #
 #driver.manage.new_window :tab
 if post then
 end # if post
 
 # sleep sleeping
+=end
 
 driver.quit
 def none
