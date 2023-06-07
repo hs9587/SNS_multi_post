@@ -1,7 +1,8 @@
 require 'selenium-webdriver'
 
 Selenium::WebDriver::Edge::Service.driver_path \
-  = File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
+  = File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
+  #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
 
 urls = {
   twitter:   'https://twitter.com/home',
@@ -117,10 +118,9 @@ if post and images.size > 0 then # インスタは画像がないとね
   input_multi = wait.until do
     driver.find_element(xpath: '//input[@multiple]')
   end # input_multi = wait.until do
-  input_multi.send_keys File.join(downloads, images.first)
-  # ひとつだけ
-  # multiplle だけど、複数ファイル指定は成功してない、
-  # 「"」区切りスペース区切りかセミコロンか駄目だった
+  images_multi = images.map{File.join downloads, _1}.join("\n")
+  input_multi.send_keys images_multi
+  # multiplle へはファイル名を改行区切りで転結する
   sleep sleeping
   driver.find_element(xpath: '//div[text()="次へ"]').click
   sleep sleeping

@@ -1,7 +1,8 @@
 require 'selenium-webdriver'
 
 Selenium::WebDriver::Edge::Service.driver_path \
-  = File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
+  = File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
+  #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
 
 urls = {
   twitter:  'https://twitter.com/home',
