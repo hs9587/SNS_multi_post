@@ -20,6 +20,7 @@ images, downloads = [], 'C:\Users\hs9587\Downloads'
 post    = true
 post    = false 
 
+def none
 if ARGV.size > 0 then
   message = ARGV.shift
   images  = ARGV
@@ -200,7 +201,6 @@ end # if post
 =end
 
 driver.quit
-def none
 end # def none
 
 if $PROGRAM_NAME == __FILE__ then
