@@ -205,8 +205,9 @@ end # def none
 
 if $PROGRAM_NAME == __FILE__ then
   require 'optparse'
-  message = 'おはようございます'
   twitter, facebook, instagram, mixi, fedibird = [false] * 5
+  downloads = 'C:\Users\hs9587\Downloads'  
+  message, images = 'おはようございます', []
   ARGV.options do |opts|
     opts.banner += ' <message> <image> (<image> ..)' 
     opts.separator <<-EOhelp
@@ -220,14 +221,22 @@ if $PROGRAM_NAME == __FILE__ then
     opts.on('-f','--facebook' ,'Facebook') { facebook  = true }
     opts.on('-i','--instagram','Instagram needs image(s)') \
                                            { instagram = true }
-    opts.on('-m','--mixi'     ,'mixi')     { mixi      = true }
+    opts.on('-m','--mixi'     ,'mixi at most one imege') \
+                                           { mixi      = true }
     opts.on('-b','--fedibird' ,'Mastodon Fedi*B*ird') \
                                            { fedibird  = true }
-    opts.on('--tfmb','t f   m b without image') {}
-    opts.on('--tmb' ,'t     m b with image(s)') {}
-    opts.on('--fimb','  f i m b with image(s)') {}
-    opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)')
+    opts.on('--tfmb','t f   m b with/without image(s)') \
+      {teitter,facebook,          mixi,fedibird = true,true,     true,true }
+    opts.on('--tmb' ,'t     m b with/without image(s)') \
+      {teitter,                   mixi,fedibird = true,          true,true }
+    opts.on('--fimb','  f i m b neads image(s)') \
+      {        facebook,instagram,mixi,fedibird =      true,true,true,true }
+    opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)') \
+      { download = _1 }
+    message = ARGV.shift if ARGV.size > 0
+    images  = ARGV       if ARGV.size > 0
 
     opts.parse!
   end # ARGV.options do |opts|
+  puts message, images
 end # if $PROGRAM_NAME == __FILE__
