@@ -205,4 +205,29 @@ end # def none
 
 if $PROGRAM_NAME == __FILE__ then
   require 'optparse'
+  message = 'おはようございます'
+  twitter, facebook, instagram, mixi, fedibird = [false] * 5
+  ARGV.options do |opts|
+    opts.banner += ' <message> <image> (<image> ..)' 
+    opts.separator <<-EOhelp
+  いくつかのSNSにメッセージと画像を投稿する。
+  <message> に空白を挿むときは全体を引用符で囲う
+  <image>ファイル名はダウンロードディレクトリとかの下の名前だけのつもり
+  <message> <image> 引数なにも無いときは「おはようございます」とする
+    EOhelp
+
+    opts.on('-t','--twitter'  ,'Twitter')  { twitter   = true }
+    opts.on('-f','--facebook' ,'Facebook') { facebook  = true }
+    opts.on('-i','--instagram','Instagram needs image(s)') \
+                                           { instagram = true }
+    opts.on('-m','--mixi'     ,'mixi')     { mixi      = true }
+    opts.on('-b','--fedibird' ,'Mastodon Fedi*B*ird') \
+                                           { fedibird  = true }
+    opts.on('--tfmb','t f   m b without image') {}
+    opts.on('--tmb' ,'t     m b with image(s)') {}
+    opts.on('--fimb','  f i m b with image(s)') {}
+    opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)')
+
+    opts.parse!
+  end # ARGV.options do |opts|
 end # if $PROGRAM_NAME == __FILE__
