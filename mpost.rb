@@ -205,7 +205,13 @@ end # def none
 
 if $PROGRAM_NAME == __FILE__ then
   require 'optparse'
-  twitter, facebook, instagram, mixi, fedibird = [false] * 5
+  mpost = {
+    twitter:   false, 
+    facebook:  false, 
+    instagram: false, 
+    mixi:      false, 
+    fedibird:  false,
+  } # mpost = 
   downloads = 'C:\Users\hs9587\Downloads'  
   message, images = 'おはようございます', []
   ARGV.options do |opts|
@@ -217,26 +223,31 @@ if $PROGRAM_NAME == __FILE__ then
   <message> <image> 引数なにも無いときは「おはようございます」とする
     EOhelp
 
-    opts.on('-t','--twitter'  ,'Twitter')  { twitter   = true }
-    opts.on('-f','--facebook' ,'Facebook') { facebook  = true }
+    opts.on('-t','--twitter'  ,'Twitter')  { mpost[:twitter]  = true }
+    opts.on('-f','--facebook' ,'Facebook') { mpost[:facebook] = true }
     opts.on('-i','--instagram','Instagram needs image(s)') \
-                                           { instagram = true }
+                                           { mpost[:instagram]= true }
     opts.on('-m','--mixi'     ,'mixi at most one imege') \
-                                           { mixi      = true }
+                                           { mpost[:mixi]     = true }
     opts.on('-b','--fedibird' ,'Mastodon Fedi*B*ird') \
-                                           { fedibird  = true }
+                                           { mpost[:fedibird] = true }
     opts.on('--tfmb','t f   m b with/without image(s)') \
-      {teitter,facebook,          mixi,fedibird = true,true,     true,true }
+      {[:twitter,:facebook,          :mixi,:fedibird].each{ mpost[_1] = true }}
     opts.on('--tmb' ,'t     m b with/without image(s)') \
-      {teitter,                   mixi,fedibird = true,          true,true }
+      {[:twitter,                    :mixi,:fedibird].each{ mpost[_1] = true }}
     opts.on('--fimb','  f i m b neads image(s)') \
-      {        facebook,instagram,mixi,fedibird =      true,true,true,true }
+      {[        :facebook,:instagram,:mixi,:fedibird].each{ mpost[_1] = true }}
     opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)') \
       { download = _1 }
-    message = ARGV.shift if ARGV.size > 0
-    images  = ARGV       if ARGV.size > 0
 
     opts.parse!
   end # ARGV.options do |opts|
+  message = ARGV.shift if ARGV.size > 0
+  images  = ARGV
+  raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
   puts message, images
+
+  mpost.each do |sns, v|
+    sns.display if v
+  end # mpost.each do |sns, v|
 end # if $PROGRAM_NAME == __FILE__
