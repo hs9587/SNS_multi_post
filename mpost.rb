@@ -247,7 +247,6 @@ if $PROGRAM_NAME == __FILE__ then
   raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
   puts message, images
 
-
   mpost.each do |sns, v|
     sns.display if v
   end # mpost.each do |sns, v|
