@@ -213,14 +213,15 @@ if $PROGRAM_NAME == __FILE__ then
     fedibird:  false,
   } # mpost = 
   downloads = 'C:\Users\hs9587\Downloads'  
+  cookies   = '../cookies.json'
   message, images = 'おはようございます', []
   ARGV.options do |opts|
     opts.banner += ' <message> <image> (<image> ..)' 
     opts.separator <<-EOhelp
   いくつかのSNSにメッセージと画像を投稿する。
   <message> に空白を挿むときは全体を引用符で囲う
-  <image>ファイル名はダウンロードディレクトリとかの下の名前だけのつもり
-  <message> <image> 引数なにも無いときは「おはようございます」とする
+  <image>ファイル名はダウンロードディレクトリとかの下の、名前だけのつもり
+  <message> <image> 引数なにも無いときは「おはようございます」
     EOhelp
 
     opts.on('-t','--twitter'  ,'Twitter')  { mpost[:twitter]  = true }
@@ -239,23 +240,26 @@ if $PROGRAM_NAME == __FILE__ then
       {[        :facebook,:instagram,:mixi,:fedibird].each{ mpost[_1] = true }}
     opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)') \
       { download = _1 }
+    opts.on('--cookies=FILE'   ,'authentication cookies JSON file path') \
+      { cookies  = _1 }
+    opts.separator ' '*40 + '(DEFAULT: ../cookies.json)'
 
     opts.parse!
   end # ARGV.options do |opts|
-  message = ARGV.shift if ARGV.size > 0
-  images  = ARGV
+  message  = ARGV.shift if ARGV.size > 0
+  images   = ARGV
   raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
+  authents = JSON File.read(cookies), symbolize_names: true
+  sleeping = 5
   puts message, images.inspect
 
   if mpost.count{_2} > 0 then
-    driver = Selenium::WebDriver.for :edge
-    cookies = JSON File.read('../cookies.json'), symbolize_names: true
-    sleeping = 5
+    driver   = Selenium::WebDriver.for :edge
     begin# ensure
       driver.get "https://www.google.com/"
       mpost.select{_2}.each do |sns,|
         sns.display
-        (driver, sns, message, images)
+        #(driver, sns, message, images)
       end # mpost.each do |sns,|
     ensure
       driver.quit
