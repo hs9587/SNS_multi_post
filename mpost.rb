@@ -245,9 +245,11 @@ if $PROGRAM_NAME == __FILE__ then
   message = ARGV.shift if ARGV.size > 0
   images  = ARGV
   raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
-  puts message, images
+  puts message, images.inspect
 
-  mpost.each do |sns, v|
-    sns.display if v
-  end # mpost.each do |sns, v|
+  if mpost.count{_2} > 0 then
+    mpost.select{_2}.each do |sns, v|
+      sns.display if v
+    end # mpost.each do |sns, v|
+  end # if mpost.count{_2} > 0 
 end # if $PROGRAM_NAME == __FILE__
