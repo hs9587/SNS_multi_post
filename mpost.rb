@@ -206,11 +206,12 @@ driver.quit
 end # def none
 
 class Browser
-  def initialize(authents, sleeping: 5,  browser: :edge)
-    @authents = authents
-    @sleeping = sleeping
-    @browser  = browser
-    @driver   = Selenium::WebDriver.for @browser
+  def initialize(authents, downloads, sleeping: 5,  browser: :edge)
+    @authents  = authents
+    @downloads = downloads
+    @sleeping  = sleeping
+    @browser   = browser
+    @driver    = Selenium::WebDriver.for @browser
     if block_given? then
       begin
         yield self
@@ -285,10 +286,11 @@ if $PROGRAM_NAME == __FILE__ then
       {[:twitter,                    :mixi,:fedibird].each{ mpost[_1] = true }}
     opts.on('--fimb','  f i m b neads image(s)') \
       {[        :facebook,:instagram,:mixi,:fedibird].each{ mpost[_1] = true }}
+
     opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)') \
-      { download = _1 }
+      { downloads = _1 }
     opts.on('--cookies=FILE'   ,'authentication cookies JSON file path') \
-      { cookies  = _1 }
+      { cookies   = _1 }
     opts.separator ' '*40 + '(DEFAULT: ../cookies.json)'
 
     opts.parse!
@@ -300,11 +302,11 @@ if $PROGRAM_NAME == __FILE__ then
   puts message, images.inspect
 
   if mpost.count{_2} > 0 then
-    Browser.new authents, sleeping: 5, browser: :edge do |browser|
+    Browser.new authents, downloads, sleeping: 5, browser: :edge do |browser|
       mpost.select{_2}.each do |sns,|
         sns.display
         browser.send sns, message, images
       end # mpost.each do |sns,|
-    end # Browser.new authents, sleeping: 5, browser: :edge do |browser|
+    end # Browser.new authents, downloads, sleeping: 5, browser: :edge do
   end # if mpost.count{_2} > 0 
 end # if $PROGRAM_NAME == __FILE__
