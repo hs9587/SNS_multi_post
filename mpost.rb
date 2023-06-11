@@ -4,13 +4,15 @@ Selenium::WebDriver::Edge::Service.driver_path \
   = File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
   #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
 
-urls = {
+class Browser 
+  URLs = {
   twitter:   'https://twitter.com/home',
   facebook:  'https://www.facebook.com/',
   instagram: 'https://www.instagram.com/',
   mixi:      'https://mixi.jp/home.pl',
   fedibird:  'https://fedibird.com/web/timelines/home',
 }
+end # class Browser 
 cookies = JSON File.read('../cookies.json'), symbolize_names: true
 handles = {}
 sleeping = 5
@@ -203,6 +205,51 @@ end # if post
 driver.quit
 end # def none
 
+class Browser
+  def initialize(authents, sleeping: 5,  browser: :edge)
+    @authents = authents
+    @sleeping = sleeping
+    @browser  = browser
+    @driver   = Selenium::WebDriver.for @browser
+    if block_given? then
+      begin
+        yield self
+      ensure
+        quit
+        self
+      end
+    else# if block_given?
+      self
+    end # if block_given?
+  end # def initialize(authents, sleeping: 5,  browser: :edge)
+  def quit = @driver.quit
+
+  def twitter(message, images)
+    asdf __method__
+  end # def twitter(message, images)
+  def facebook(message, images)
+    asdf __method__
+  end # def facebook(message, images)
+  def instagram(message, images)
+    asdf __method__
+  end # def instagram(message, images)
+  def mixi(message, images)
+    asdf __method__
+  end # def mixi(message, images)
+  def fedibird(message, images)
+    asdf __method__
+  end # def fedibird(message, images)
+  
+  private
+    def asdf(sns)
+      sym = sns.to_sym
+      @driver.get URLs[sym]
+      @authents[sym].each{ @driver.manage.add_cookie _1 }
+      @driver.get URLs[sym]
+    end # def asdf(sns)
+  # private
+end # class Browser
+
 if $PROGRAM_NAME == __FILE__ then
   require 'optparse'
   mpost = {
@@ -250,19 +297,14 @@ if $PROGRAM_NAME == __FILE__ then
   images   = ARGV
   raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
   authents = JSON File.read(cookies), symbolize_names: true
-  sleeping = 5
   puts message, images.inspect
 
   if mpost.count{_2} > 0 then
-    driver   = Selenium::WebDriver.for :edge
-    begin# ensure
-      driver.get "https://www.google.com/"
+    Browser.new authents, sleeping: 5, browser: :edge do |browser|
       mpost.select{_2}.each do |sns,|
         sns.display
-        #(driver, sns, message, images)
+        browser.send sns, message, images
       end # mpost.each do |sns,|
-    ensure
-      driver.quit
-    end # ensure
+    end # Browser.new authents, sleeping: 5, browser: :edge do |browser|
   end # if mpost.count{_2} > 0 
 end # if $PROGRAM_NAME == __FILE__
