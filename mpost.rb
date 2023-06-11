@@ -248,8 +248,17 @@ if $PROGRAM_NAME == __FILE__ then
   puts message, images.inspect
 
   if mpost.count{_2} > 0 then
-    mpost.select{_2}.each do |sns, v|
-      sns.display if v
-    end # mpost.each do |sns, v|
+    driver = Selenium::WebDriver.for :edge
+    cookies = JSON File.read('../cookies.json'), symbolize_names: true
+    sleeping = 5
+    begin# ensure
+      driver.get "https://www.google.com/"
+      mpost.select{_2}.each do |sns,|
+        sns.display
+        (driver, sns, message, images)
+      end # mpost.each do |sns,|
+    ensure
+      driver.quit
+    end # ensure
   end # if mpost.count{_2} > 0 
 end # if $PROGRAM_NAME == __FILE__
