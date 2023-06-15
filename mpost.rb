@@ -226,28 +226,28 @@ class Browser
   def quit = @driver.quit
 
   def twitter(message, images)
-    asdf __method__
+    auth_cookie __method__
   end # def twitter(message, images)
   def facebook(message, images)
-    asdf __method__
+    auth_cookie __method__
   end # def facebook(message, images)
   def instagram(message, images)
-    asdf __method__
+    auth_cookie __method__
   end # def instagram(message, images)
   def mixi(message, images)
-    asdf __method__
+    auth_cookie __method__
   end # def mixi(message, images)
   def fedibird(message, images)
-    asdf __method__
+    auth_cookie __method__
   end # def fedibird(message, images)
   
   private
-    def asdf(sns)
+    def auth_cookie(sns)
       sym = sns.to_sym
       @driver.get URLs[sym]
       @authents[sym].each{ @driver.manage.add_cookie _1 }
       @driver.get URLs[sym]
-    end # def asdf(sns)
+    end # def auth_cookie(sns)
   # private
 end # class Browser
 
