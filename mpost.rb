@@ -246,7 +246,50 @@ class Browser
 
   def facebook(message, images)
     auth_cookie __method__
+    ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
+    ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
+    ### いや、やっぱ必要かも、なんか条件探った方がいいか
+    e = @driver.find_element tag_name: 'body'
+    e.click
+ 
     if message then
+      ## 入力欄をクリックすると投稿ダイアローグが開く
+      e = @driver.find_element \
+        xpath: '//span[text()="Hi Shimuraさん、その気持ち、シェアしよう"]'
+      e .click
+      ## 投稿ダイアローグにて # 準備できるまでちょっと時間掛かる
+      wait = Selenium::WebDriver::Wait.new :timeout => 20
+      e =  wait.until do
+        @driver.find_element \
+        xpath: '//div[@aria-label="Hi Shimuraさん、その気持ち、シェアしよう"]'
+      end # e =  wait.until do
+      e.send_keys message
+
+      if images.size > 0 then
+        e = @driver.find_element xpath: '//div[@aria-label="写真・動画"]'
+        e.click
+        #sleep @sleeping
+        e = wait.until do
+          @driver.find_element xpath: '//input[@type="file"]'
+        end # e = wait.until do
+        #e.attribute('outerHTML').+("\n").display
+
+        # 初回の input要素は動画っぽくて駄目なの一回書き飛ばす
+        e.send_keys File.join(@downloads, images.first)
+        sleep @sleeping
+
+        images.each do |img|
+          e = wait.until do
+            @driver.find_element xpath: '//input[@type="file"]'
+          end # e = wait.until do
+          #e.attribute('outerHTML').+("\n").display
+          e.send_keys File.join(@downloads, img)
+          sleep sleeping
+        end # images.each do |img|
+      end # if images.size > 0
+
+      e = @driver.find_element xpath: '//div[@aria-label="投稿"]'
+      e.click
     end # if message
   end # def facebook(message, images)
 

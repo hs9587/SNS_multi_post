@@ -26,6 +26,7 @@ driver.get urls[:twitter]
 cookies[:twitter].each{ driver.manage.add_cookie _1 }
 driver.get urls[:twitter]
 handles[:twitter] = driver.window_handle
+sleep sleeping
 
 if post then
   driver.find_element(class: 'public-DraftEditor-content').send_keys message
