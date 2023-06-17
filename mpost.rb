@@ -230,6 +230,14 @@ class Browser
     if message then
       e = @driver.find_element class: 'public-DraftEditor-content'
       e.send_keys message
+
+      if images.size > 0 then
+        e = @driver.find_element tag_name: "input"
+        images.each do |img|
+          e.send_keys File.join(downloads, img)
+        end # images.each do |img|
+      end # if images.size > 0
+
       e = @driver.find_element xpath: '//div[@data-testid="tweetButtonInline"]'
       e.click
     end # if message
