@@ -228,7 +228,10 @@ class Browser
   def twitter(message, images)
     auth_cookie __method__
     if message then
-      e = @driver.find_element class: 'public-DraftEditor-content'
+      wait = Selenium::WebDriver::Wait.new :timeout => 20
+      e = wait.until do
+        @driver.find_element class: 'public-DraftEditor-content'
+      end # e = wait.until do
       e.send_keys message
 
       if images.size > 0 then
