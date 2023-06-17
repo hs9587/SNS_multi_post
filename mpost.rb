@@ -286,11 +286,12 @@ if $PROGRAM_NAME == __FILE__ then
       {[:twitter,                    :mixi,:fedibird].each{ mpost[_1] = true }}
     opts.on('--fimb','  f i m b neads image(s)') \
       {[        :facebook,:instagram,:mixi,:fedibird].each{ mpost[_1] = true }}
-
+    opts.on('--no-message','no post, only cookie authentication') \
+      { message   = nil }
     opts.on('--image_path=PATH','image path (DEFAULT: <User>Downloads)') \
-      { downloads = _1 }
+      { downloads = _1  }
     opts.on('--cookies=FILE'   ,'authentication cookies JSON file path') \
-      { cookies   = _1 }
+      { cookies   = _1  }
     opts.separator ' '*40 + '(DEFAULT: ../cookies.json)'
 
     opts.parse!
