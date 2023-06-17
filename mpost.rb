@@ -228,23 +228,31 @@ class Browser
   def twitter(message, images)
     auth_cookie __method__
     if message then
+      e = @driver.find_element class: 'public-DraftEditor-content'
+      e.send_keys message
+      e = @driver.find_element xpath: '//div[@data-testid="tweetButtonInline"]'
+      e.click
     end # if message
   end # def twitter(message, images)
+
   def facebook(message, images)
     auth_cookie __method__
     if message then
     end # if message
   end # def facebook(message, images)
+
   def instagram(message, images)
     auth_cookie __method__
     if message then
     end # if message
   end # def instagram(message, images)
+
   def mixi(message, images)
     auth_cookie __method__
     if message then
     end # if message
   end # def mixi(message, images)
+ 
   def fedibird(message, images)
     auth_cookie __method__
     if message then
