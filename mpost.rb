@@ -252,6 +252,8 @@ class Browser
     ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
     ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
     ### いや、やっぱ必要かも、なんか条件探った方がいいか
+    #### グレイアウトするまでちょっと魔があるということか
+    ## グレイアウト解けててもクリック可なのでクリックはイキにしましょう
     e = @driver.find_element tag_name: 'body'
     e.click
  
@@ -271,7 +273,6 @@ class Browser
       if images.size > 0 then
         e = @driver.find_element xpath: '//div[@aria-label="写真・動画"]'
         e.click
-        #sleep @sleeping
         e = wait.until do
           @driver.find_element xpath: '//input[@type="file"]'
         end # e = wait.until do
