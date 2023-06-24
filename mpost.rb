@@ -383,6 +383,7 @@ if $PROGRAM_NAME == __FILE__ then
   authents = JSON File.read(cookies), symbolize_names: true
   puts message, images.inspect
 
+  # mpost はSNS名=>諾否(true/false)のハッシュ、その諾の物だけ数える/選ぶ
   if mpost.count{_2} > 0 then
     Browser.new authents, downloads, sleeping: 5, browser: :edge do |browser|
       mpost.select{_2}.each do |sns,|
