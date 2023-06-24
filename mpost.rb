@@ -250,10 +250,10 @@ class Browser
   def facebook(message, images)
     auth_cookie __method__
     ## クッキー設定後の描画後少しすると全体がグレイアウトするので画面をクリック
-    ### スクリプト実行では違うのでコメントアウト。クリックするとむしろ駄目
-    ### いや、やっぱ必要かも、なんか条件探った方がいいか
-    #### グレイアウトするまでちょっと魔があるということか
-    ## グレイアウト解けててもクリック可なのでクリックはイキにしましょう
+    ## グレイアウト解けてても.click可なのでそれを繰り返してもいい感じで 
+    ## グレイアウトまで時間掛かったりしてタイミング難しくて、
+    ### ちょっと待ったり、次の場面でエラートラップしたり
+    sleep @sleeping
     e = @driver.find_element tag_name: 'body'
     e.click
  
@@ -261,7 +261,14 @@ class Browser
       ## 入力欄をクリックすると投稿ダイアローグが開く
       e = @driver.find_element \
         xpath: '//span[text()="Hi Shimuraさん、その気持ち、シェアしよう"]'
-      e .click
+      # グレイアウトが解けてなくてエラーになったら画面.clickから繰り返す
+      begin# rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+        e .click
+      rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+        @driver.find_element(tag_name: 'body').click
+        e .click
+      end  # rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+
       ## 投稿ダイアローグにて # 準備できるまでちょっと時間掛かる
       wait = Selenium::WebDriver::Wait.new :timeout => 20
       e =  wait.until do
