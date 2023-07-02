@@ -356,6 +356,21 @@ class Browser
   def mixi(message, images)
     auth_cookie __method__
     if message then
+      e = @driver.find_element id: 'voiceComment'
+      e.send_keys message
+
+      if images.size > 0 then
+        e = @driver.find_element xpath: '//a[@title="写真を追加"]'
+        e.click
+        #ファイル選択が出てくる
+        e = @driver.find_element xpath: '//input[@name="photo"]'
+        #前項.click しないと見付からない
+        e.send_keys File.join(@downloads, images.first)
+        # mixiつぶやきは写真ひとつだけ、先頭を投稿します
+      end # if images.size > 0
+      
+      e = @driver.find_element id: 'voicePostSubmit'
+      e.click
     end # if message
   end # def mixi(message, images)
  
