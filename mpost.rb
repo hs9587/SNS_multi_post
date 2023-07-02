@@ -295,7 +295,7 @@ class Browser
           end # e = wait.until do
           #e.attribute('outerHTML').+("\n").display
           e.send_keys File.join(@downloads, img)
-          sleep sleeping
+          sleep @sleeping
         end # images.each do |img|
       end # if images.size > 0
 
@@ -306,8 +306,51 @@ class Browser
 
   def instagram(message, images)
     auth_cookie __method__
-    if message then
-    end # if message
+    # ログイン再開時、お知らせをオンにするかのダイアローグ開くので、後で
+    begin# rescue Selenium::WebDriver::Error::NoSuchElementError
+      e = @driver.find_element xpath: '//button[text()="後で"]'
+      e.click
+    rescue Selenium::WebDriver::Error::NoSuchElementError
+    # ログインすぐだと出ないこともある
+    end # rescue Selenium::WebDriver::Error::NoSuchElementError
+
+    # インスタグラムは画像があるの前提
+    if message and images.size > 0 then
+      # 以下、なんか、xpath: //svg が効かなくて、tag_name: svg から選んでる
+      es = @driver.find_elements tag_name: 'svg'
+      # 投稿ダイアローグを出す
+      e = es.select{ _1.attribute('aria-label')=='新規投稿' }.first
+      e.click
+
+      ## 投稿ダイアローグにて # 準備できるまでちょっと時間掛かる
+      wait = Selenium::WebDriver::Wait.new :timeout => 20
+
+      e = wait.until do
+        @driver.find_element xpath: '//input[@multiple]'
+      end # e = wait.until do
+      # multiplle へはファイル名を改行区切りで連結する
+      images_multi = images.map{File.join @downloads, _1}.join("\n")
+      e.send_keys images_multi
+      sleep @sleeping
+
+      e = @driver.find_element xpath: '//div[text()="次へ"]' 
+      e.click
+      #sleep @sleeping
+      e = @driver.find_element xpath: '//div[text()="次へ"]'
+      e.click
+      e = wait.until do
+        @driver.find_element xpath: '//div[@aria-label="キャプションを入力…"]'
+      end # e = wait.until do
+      e.send_keys message
+
+      e = @driver.find_element xpath: '//div[text()="シェア"]'
+      e.click
+      #sleep @sleeping
+      #sleep @sleeping
+      e = wait.until do
+        @driver.find_element xpath: '//div[text()="投稿をシェアしました"]'
+      end # e = wait.until do
+    end # if message and images.size > 0
   end # def instagram(message, images)
 
   def mixi(message, images)
