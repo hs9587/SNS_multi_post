@@ -377,6 +377,27 @@ class Browser
   def fedibird(message, images)
     auth_cookie __method__
     if message then
+      e= @driver.find_element xpath: '//textarea[@placeholder="今なにしてる？"]'
+      e.send_keys message
+
+      images.each do |img|
+        e = @driver.find_element xpath: '//input[@type="file"]'
+        e.send_keys File.join(@downloads, img)
+        # 複数画像、(xpath: '//input[@type="file"]')  から繰り返す
+        
+        uing = true # 画像アップロード中は待ちます
+        while uing do
+          sleep @sleeping
+          begin# rescue Selenium::WebDriver::Error::NoSuchElementError
+            @driver.find_element class: 'upload-progress__message'
+          rescue Selenium::WebDriver::Error::NoSuchElementError
+            uing = false
+          end  # rescue Selenium::WebDriver::Error::NoSuchElementError
+        end # while uing do
+      end # images.each do |img|
+
+      e = @driver.find_element xpath: '//button[text()="トゥート！"]'
+      e.click
     end # if message
   end # def fedibird(message, images)
 
