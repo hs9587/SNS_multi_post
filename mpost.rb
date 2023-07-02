@@ -364,6 +364,9 @@ class Browser
     if message then
     end # if message
   end # def fedibird(message, images)
+
+  def blueskay(message, images)
+  end # def blueskay(message, images)
   
   private
     def auth_cookie(sns)
