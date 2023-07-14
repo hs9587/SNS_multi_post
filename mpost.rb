@@ -299,9 +299,7 @@ class Browser
         end # images.each do |img|
       end # if images.size > 0
 
-      e = wait.until do
-        @driver.find_element xpath: '//div[@aria-label="投稿"]'
-      end # e = wait.until do
+      e = @driver.find_element xpath: '//div[@aria-label="投稿"]'
       e.click
     end # if message
   end # def facebook(message, images)
