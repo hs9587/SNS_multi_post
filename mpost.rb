@@ -2,8 +2,9 @@ require 'selenium-webdriver'
 Selenium::WebDriver::Edge::Service.driver_path \
   = File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
   #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
+
 class Object
-  def   display_n(out = $stdout) = out.puts self
+  def   display_n(out = $stdout) =  out.puts self
   def   display_s(out = $stdout) = (self.display out;  ' '.display   out)
   def s_display_n(out = $stdout) = ( ' '.display out; self.display_n out)
   def n_display_n(out = $stdout) = ("\n".display out; self.display_n out)
