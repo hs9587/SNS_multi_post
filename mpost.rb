@@ -6,12 +6,13 @@ Selenium::WebDriver::Edge::Service.driver_path \
 
 class Browser 
   URLs = {
-  twitter:   'https://twitter.com/home',
-  facebook:  'https://www.facebook.com/',
-  instagram: 'https://www.instagram.com/',
-  mixi:      'https://mixi.jp/home.pl',
-  fedibird:  'https://fedibird.com/web/timelines/home',
-}
+    google:    'https://www.google.com/',
+    twitter:   'https://twitter.com/home',
+    facebook:  'https://www.facebook.com/',
+    instagram: 'https://www.instagram.com/',
+    mixi:      'https://mixi.jp/home.pl',
+    fedibird:  'https://fedibird.com/web/timelines/home',
+  }
 end # class Browser 
 cookies = JSON File.read('../cookies.json'), symbolize_names: true
 handles = {}
@@ -303,6 +304,7 @@ class Browser
       e.click
       sleep @sleeping
     end # if message
+    @driver.get URLs[:google]
   end # def facebook(message, images)
 
   def instagram(message, images)
