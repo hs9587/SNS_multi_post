@@ -301,6 +301,7 @@ class Browser
 
       e = @driver.find_element xpath: '//div[@aria-label="投稿"]'
       e.click
+      sleep @sleeping
     end # if message
   end # def facebook(message, images)
 
@@ -345,11 +346,10 @@ class Browser
 
       e = @driver.find_element xpath: '//div[text()="シェア"]'
       e.click
-      #sleep @sleeping
-      #sleep @sleeping
       e = wait.until do
         @driver.find_element xpath: '//div[text()="投稿をシェアしました"]'
       end # e = wait.until do
+      sleep @sleeping
     end # if message and images.size > 0
   end # def instagram(message, images)
 
@@ -371,6 +371,7 @@ class Browser
       
       e = @driver.find_element id: 'voicePostSubmit'
       e.click
+      sleep @sleeping
     end # if message
   end # def mixi(message, images)
  
@@ -398,6 +399,7 @@ class Browser
 
       e = @driver.find_element xpath: '//button[text()="トゥート！"]'
       e.click
+      sleep @sleeping
     end # if message
   end # def fedibird(message, images)
 
