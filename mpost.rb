@@ -1,8 +1,12 @@
 require 'selenium-webdriver'
-
 Selenium::WebDriver::Edge::Service.driver_path \
   = File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
   #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
+class Object
+  def   display_n(out = $stdout); out.puts self; end
+  def s_display_n(out = $stdout);  ' '.display out; self.display_n out; end
+  def n_display_n(out = $stdout); "\n".display out; self.display_n out; end
+end # class Object
 
 class Browser 
   URLs = {
@@ -275,7 +279,7 @@ if $PROGRAM_NAME == __FILE__ then
   images   = ARGV
   raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
   authents = JSON File.read(cookies), symbolize_names: true
-  puts message, images.inspect
+  message.+(' ').display images.inspect
 
   # mpost はSNS名=>諾否(true/false)のハッシュ、その諾の物だけ数える/選ぶ
   if mpost.count{_2} > 0 then
