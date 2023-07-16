@@ -3,9 +3,10 @@ Selenium::WebDriver::Edge::Service.driver_path \
   = File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
   #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
 class Object
-  def   display_n(out = $stdout); out.puts self; end
-  def s_display_n(out = $stdout);  ' '.display out; self.display_n out; end
-  def n_display_n(out = $stdout); "\n".display out; self.display_n out; end
+  def   display_n(out = $stdout) = out.puts self
+  def   display_s(out = $stdout) = (self.display out;  ' '.display   out)
+  def s_display_n(out = $stdout) = ( ' '.display out; self.display_n out)
+  def n_display_n(out = $stdout) = ("\n".display out; self.display_n out)
 end # class Object
 
 class Browser 
@@ -276,16 +277,17 @@ if $PROGRAM_NAME == __FILE__ then
     opts.parse!
   end # ARGV.options do |opts|
   message  = ARGV.shift if ARGV.size > 0
+  message.inspect.display
   images   = ARGV
+  images.inspect.s_display_n
   raise 'Instagram needs image(s)' if mpost[:instagram] and images.size==0
   authents = JSON File.read(cookies), symbolize_names: true
-  message.+(' ').display images.inspect
 
   # mpost はSNS名=>諾否(true/false)のハッシュ、その諾の物だけ数える/選ぶ
   if mpost.count{_2} > 0 then
     Browser.new authents, downloads, sleeping: 5, browser: :edge do |browser|
       mpost.select{_2}.each do |sns,|
-        sns.display
+        sns.display_s
         browser.send sns, message, images
       end # mpost.each do |sns,|
     end # Browser.new authents, downloads, sleeping: 5, browser: :edge do
