@@ -19,6 +19,28 @@ Instagram の同時シェアが Facebook だけになって Twitter・Tumblr・�
    1. この辺で写真のために SNS 選んだり、準備投稿とかあるかもしれません。
 5. サーバに仕込んで遠隔から投稿できるようになれば最高ですが、流石に難しいかな。
 
+## $ ruby mpost.rb --help
+```
+$ ruby mpost.rb --help
+Usage: mpost [options] <message> <image> (<image> ..)
+  いくつかのSNSにメッセージと画像を投稿する。
+  <message> に空白を挿むときは全体を引用符で囲う
+  <image>ファイル名はダウンロードディレクトリとかの下の、名前だけのつもり
+  <message> <image> 引数なにも無いときは「おはようございます」
+    -t, --twitter                    Twitter
+    -f, --facebook                   Facebook
+    -i, --instagram                  Instagram needs image(s)
+    -m, --mixi                       mixi at most one imege
+    -b, --fedibird                   Mastodon Fedi*B*ird
+        --tfmb                       t f   m b with/without image(s)
+        --tmb                        t     m b with/without image(s)
+        --fimb                         f i m b neads image(s)
+        --no-message                 no post, only cookie authentication
+        --image_path=PATH            image path (DEFAULT: <User>Downloads)
+        --cookies=FILE               authentication cookies JSON file path
+                                        (DEFAULT: ../cookies.json)
+```
+
 ## Win32OLE
 OLE でのブラウザオートメーションを試すのだけど、
 Edge, Chrome, Firefox は OLE 非対応。
