@@ -1,6 +1,7 @@
 require 'selenium-webdriver'
 Selenium::WebDriver::Edge::Service.driver_path \
-  = File.join '..\edgedriver.118.0.2088.46\edgedriver_win64', 'msedgedriver.exe'
+  = File.join '..\edgedriver.119.0.2151.44\edgedriver_win64', 'msedgedriver.exe'
+ #= File.join '..\edgedriver.118.0.2088.46\edgedriver_win64', 'msedgedriver.exe'
  #= File.join '..\edgedriver.116.0.1938.62\edgedriver_win64', 'msedgedriver.exe'
  #= File.join '..\edgedriver.114.0.1823.18\edgedriver_win64', 'msedgedriver.exe'
  #= File.join '..\edgedriver.112.0.1722.39\edgedriver_win64', 'msedgedriver.exe'
@@ -20,6 +21,7 @@ class Browser
     instagram: 'https://www.instagram.com/',
     mixi:      'https://mixi.jp/home.pl',
     fedibird:  'https://fedibird.com/web/timelines/home',
+    threads:   'https://www.threads.net/',
   }
 
   def initialize(authents, downloads, sleeping: 5,  browser: :edge)
@@ -223,6 +225,11 @@ class Browser
 
   def blueskay(message, images)
   end # def blueskay(message, images)
+
+  def threads(message, images)
+    @driver.get URLs[:threads]
+    @authents[:threads].each{ @driver.manage.add_cookie _1 }
+  end # def threads(message, images)
   
   private
     def auth_cookie(sns)
