@@ -1,6 +1,7 @@
 require 'selenium-webdriver'
 Selenium::WebDriver::Edge::Service.driver_path \
-  = File.join '..\edgedriver.123.0.2420.65\edgedriver_win64', 'msedgedriver.exe'
+  = File.join '..\edgedriver.125.0.2535.51\edgedriver_win64', 'msedgedriver.exe'
+ #= File.join '..\edgedriver.123.0.2420.65\edgedriver_win64', 'msedgedriver.exe'
  #= File.join '..\edgedriver.121.0.2277.83\edgedriver_win64', 'msedgedriver.exe'
  #= File.join '..\edgedriver.119.0.2151.44\edgedriver_win64', 'msedgedriver.exe'
  #= File.join '..\edgedriver.118.0.2088.46\edgedriver_win64', 'msedgedriver.exe'
